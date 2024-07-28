@@ -3,7 +3,7 @@ import { MovieList } from "@/components/MovieList";
 
 export default function Home() {
   return (
-    <main className="p-4">
+    <main className="w-full p-4">
       <Header />
       <MovieList />
     </main>

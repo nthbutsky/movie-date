@@ -10,4 +10,7 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  .input-cancel-btn[type="search"]::-webkit-search-cancel-button {
+    display: none;
+  }
 }

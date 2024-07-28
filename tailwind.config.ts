@@ -20,9 +20,27 @@ const config: Config = {
             'opacity': '0',
           },
         },
+        'fade-in': {
+          '0%': {
+            'opacity': '0',
+          },
+          '100%': {
+            'opacity': '1',
+          },
+        },
+        'fade-in-delayed': {
+          '0%': {
+            'opacity': '0',
+          },
+          '100%': {
+            'opacity': '0.5',
+          },
+        }
       },
       animation: {
         'scroll-indicator': 'scroll-indicator 1s ease-in-out infinite',
+        'fade-in': 'fade-in 2s ease-in-out',
+        'fade-in-delayed': 'fade-in-delayed 4s ease-in-out',
       },
     },
   },

@@ -1,9 +1,12 @@
-type TResponse = 'True' | 'False'
+export enum EResponse {
+  TRUE = 'True',
+  FALSE = 'False'
+}
 type TMovieType = 'movie' | 'series' | 'episode'
 
 // API original data
 export type TMovieDataOrigin = {
-  Response: TResponse,
+  Response: EResponse,
   Search: TMovieOrigin[],
   totalResults: string
 }
@@ -17,7 +20,7 @@ export type TMovieOrigin = {
 
 // API transformed data
 export type TMovieData = {
-  response: TResponse,
+  response: EResponse,
   search: TMovie[],
   totalResults: string
 }
