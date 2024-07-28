@@ -1,7 +1,8 @@
 "use client";
 
 import { getMoviesDataBySearch } from "@/api/movies";
-import { TMovie } from "@/types/api/movies";
+import { TMovie } from "@/types/movies";
+import { transformApiData } from "@/utils/transformApiData";
 import { useState, useEffect } from "react";
 
 export const MovieList = () => {
@@ -17,7 +18,8 @@ export const MovieList = () => {
         return;
       }
       console.log(response.data);
-      setMovieList(response.data.Search);
+      const data = transformApiData(response.data);
+      setMovieList(data.search);
     } catch (error) {
       console.error(error);
       // setError(true);
@@ -33,11 +35,11 @@ export const MovieList = () => {
   return (
     <div>
       {movieList.map((movie) => (
-        <div key={movie.imdbID}>
-          <img src={movie.Poster} alt={movie.Title} />
-          <h2>{movie.Title}</h2>
-          <p>{movie.Year}</p>
-          <p>{movie.Type}</p>
+        <div key={movie.imdbid}>
+          <img src={movie.poster} alt={movie.title} />
+          <h2>{movie.title}</h2>
+          <p>{movie.year}</p>
+          <p>{movie.type}</p>
         </div>
       ))}
     </div>
