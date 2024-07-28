@@ -6,7 +6,7 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: 'selector',
+  darkMode: 'class',
   theme: {
     extend: {
       keyframes: {
@@ -42,6 +42,9 @@ const config: Config = {
         'fade-in': 'fade-in 2s ease-in-out',
         'fade-in-delayed': 'fade-in-delayed 4s ease-in-out',
       },
+      boxShadow: {
+        'glow': '0px 0px 12px 0px',
+      }
     },
   },
   plugins: [],

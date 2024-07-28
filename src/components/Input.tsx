@@ -32,7 +32,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           id="input"
           className={clsx(
-            "input-cancel-btn block w-full rounded-md border-0 py-1.5 text-zinc-950 caret-violet-600 shadow-sm outline-none ring-2 ring-zinc-300 transition-all ease-in-out placeholder:text-zinc-400 placeholder:transition placeholder:ease-in-out focus:bg-violet-50 focus:ring-violet-600 disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:text-zinc-500 disabled:ring-zinc-200 sm:text-sm sm:leading-6",
+            "input-cancel-btn block w-full rounded-md border-0 py-1.5 text-zinc-950 caret-violet-600 shadow-sm outline-none ring-2 ring-zinc-300 transition-all ease-in-out placeholder:text-zinc-400 placeholder:transition placeholder:ease-in-out focus:ring-violet-600 disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:text-zinc-500 disabled:ring-zinc-200 sm:text-sm sm:leading-6 dark:text-zinc-50",
             {
               "pl-10": icon,
             },

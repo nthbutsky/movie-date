@@ -93,15 +93,15 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
     () => (
       <div
         ref={movieListRef}
-        className="no-scrollbar relative flex h-[calc(100%-80px)] flex-wrap content-start justify-center gap-8 overflow-auto px-4 pb-32"
+        className="no-scrollbar relative flex flex-wrap content-start justify-center gap-8 overflow-auto p-4 pb-28"
       >
         {movieList.map((movie) => (
           <MovieCard movie={movie} key={movie.imdbid} />
         ))}
         {scroll && (
           <>
-            <ScrollIndicator className="fixed bottom-0 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2" />
-            <div className="fixed bottom-0 left-0 z-0 h-32 w-full bg-gradient-to-t from-zinc-50"></div>
+            <ScrollIndicator className="fixed bottom-2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2" />
+            <div className="fixed bottom-0 left-0 z-10 h-32 w-full bg-gradient-to-t from-zinc-50 dark:from-zinc-950"></div>
           </>
         )}
       </div>
@@ -122,13 +122,13 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
         />
       </div>
       {!loading && !error && movieList.length === 0 && (
-        <div className="bg-gradient-to-t from-zinc-950 via-violet-600 to-violet-600 bg-clip-text text-center text-2xl font-semibold text-transparent">
+        <div className="bg-gradient-to-t from-zinc-950 via-violet-600 to-violet-600 bg-clip-text text-center text-3xl font-semibold text-transparent dark:from-zinc-300 dark:via-violet-600 dark:to-violet-600">
           {message}
         </div>
       )}
       {loading && <LoadingSpinner text="Loading..." />}
       {error && (
-        <div className="bg-gradient-to-t from-zinc-950 via-red-600 to-red-600 bg-clip-text text-center text-2xl font-semibold text-transparent">
+        <div className="bg-gradient-to-t from-zinc-950 via-red-600 to-red-600 bg-clip-text text-center text-3xl font-semibold text-transparent">
           An error occurred. Please try again.
         </div>
       )}

@@ -19,8 +19,8 @@ export const MovieCard = ({ movie }: { movie: TMovie }) => {
   return (
     <div
       className={clsx(
-        "group relative h-96 w-64 overflow-hidden rounded-md shadow-lg shadow-zinc-600",
-        { "bg-white": !isValidUrl(movie.poster) },
+        "shadow-glow group relative h-96 w-64 overflow-hidden rounded-md shadow-violet-600",
+        { "bg-white dark:bg-black": !isValidUrl(movie.poster) },
       )}
     >
       {isValidUrl(movie.poster) ? (
@@ -33,13 +33,12 @@ export const MovieCard = ({ movie }: { movie: TMovie }) => {
         />
       ) : (
         <>
-          {" "}
           <Image
             src={noImage}
             alt="No image available"
             fill
             loading="lazy"
-            className="animate-fade-in absolute left-0 top-0 z-0 size-full object-contain object-top"
+            className="animate-fade-in absolute left-0 top-0 z-0 size-full object-contain object-top dark:invert"
           />
           <div
             className={clsx(
@@ -54,7 +53,7 @@ export const MovieCard = ({ movie }: { movie: TMovie }) => {
       <div className="absolute bottom-0 left-0 z-0 h-64 w-full bg-gradient-to-t from-zinc-950 transition-[bottom] duration-300 ease-in-out group-hover:-bottom-64"></div>
       <div
         className={clsx(
-          "ease-on-out absolute z-10 grid size-full grid-cols-2 grid-rows-[90%_1fr] place-items-end justify-items-start p-4 text-start text-zinc-50 transition-[opacity] duration-300 group-hover:opacity-0",
+          "ease-on-out absolute z-10 grid size-full grid-cols-2 grid-rows-[90%_1fr] place-items-end justify-items-start p-4 text-start text-zinc-50 transition-[opacity] duration-300 group-hover:opacity-0 dark:text-zinc-200",
           righteous.className,
         )}
       >
