@@ -33,7 +33,7 @@ const config: Config = {
             'opacity': '0',
           },
           '100%': {
-            'opacity': '0.5',
+            'opacity': '0.75',
           },
         }
       },

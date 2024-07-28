@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 import clsx from "clsx";
 
@@ -16,16 +16,6 @@ export interface InputProps
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, icon, onClear, ...props }, ref) => {
-    const [focused, setFocused] = useState(false);
-
-    const handleFocus = () => {
-      setFocused(true);
-    };
-
-    const handleBlur = () => {
-      setFocused(false);
-    };
-
     return (
       <div className="relative rounded-md bg-zinc-50">
         {icon && (
@@ -49,8 +39,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             className,
           )}
           ref={ref}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
           {...props}
         />
         {props.value !== "" && (
@@ -70,3 +58,5 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     );
   },
 );
+
+Input.displayName = "Input";

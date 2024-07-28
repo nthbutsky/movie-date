@@ -1,19 +1,56 @@
+import Image from "next/image";
+
 import { Righteous } from "next/font/google";
 
 import clsx from "clsx";
 
 import { TMovie } from "@/types/movies";
 
+import noImage from "@/assets/images/no-image.jpg";
+
 const righteous = Righteous({ subsets: ["latin"], weight: "400" });
 
 export const MovieCard = ({ movie }: { movie: TMovie }) => {
+  const isValidUrl = (url: string) =>
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url.startsWith("/");
+
   return (
-    <div className="group relative h-96 w-64 overflow-hidden rounded-md shadow-lg shadow-zinc-600">
-      <img
-        className="absolute left-0 top-0 -z-10 size-full object-cover object-top"
-        src={movie.poster}
-        alt={movie.title}
-      />
+    <div
+      className={clsx(
+        "group relative h-96 w-64 overflow-hidden rounded-md shadow-lg shadow-zinc-600",
+        { "bg-white": !isValidUrl(movie.poster) },
+      )}
+    >
+      {isValidUrl(movie.poster) ? (
+        <Image
+          src={movie.poster}
+          alt={movie.title}
+          fill
+          loading="lazy"
+          className="animate-fade-in absolute left-0 top-0 z-0 size-full object-cover object-top"
+        />
+      ) : (
+        <>
+          {" "}
+          <Image
+            src={noImage}
+            alt="No image available"
+            fill
+            loading="lazy"
+            className="animate-fade-in absolute left-0 top-0 z-0 size-full object-contain object-top"
+          />
+          <div
+            className={clsx(
+              "absolute left-1/2 top-[80%] z-0 w-full -translate-x-1/2 -translate-y-1/2 bg-gradient-to-t from-zinc-950 via-violet-600 to-violet-600 bg-clip-text text-center text-2xl font-semibold uppercase text-transparent",
+              righteous.className,
+            )}
+          >
+            No Poster
+          </div>
+        </>
+      )}
       <div className="absolute bottom-0 left-0 z-0 h-64 w-full bg-gradient-to-t from-zinc-950 transition-[bottom] duration-300 ease-in-out group-hover:-bottom-64"></div>
       <div
         className={clsx(

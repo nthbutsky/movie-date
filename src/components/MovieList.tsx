@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 
 import { MovieCard } from "@/components/MovieCard";
 import { ScrollIndicator } from "@/components/ScrollIndicator";
@@ -17,14 +17,20 @@ import { transformApiData } from "@/helpers/transformApiData";
 
 import { useDebounce } from "@/utils/useDebounce";
 
-export const MovieList = () => {
+export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const [movieList, setMovieList] = useState<TMovie[] | []>([]);
   const [searchValue, setSearchValue] = useState("");
   const [message, setMessage] = useState("Start exploring!");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [scroll, setScroll] = useState(false);
+
+  const DEBOUNCE_DELAY = 1000;
+
+  const movieListRef = useRef<HTMLDivElement>(null);
 
   const searchItem = async (value: string) => {
+    setError(false);
     setLoading(true);
     try {
       const response = await getMoviesDataBySearch(value);
@@ -44,23 +50,29 @@ export const MovieList = () => {
       setError(true);
     } finally {
       setLoading(false);
+      console.log(movieList);
     }
   };
 
-  const DEBOUNCE_DELAY = 1000;
-
   const debounceSearch = useDebounce(searchItem, DEBOUNCE_DELAY);
 
-  const handleSearchOnInput = useCallback((value: string) => {
-    setSearchValue(value);
-    if (value.length >= 2) {
-      debounceSearch(value);
-    }
-    if (searchValue === "") {
-      setMovieList([]);
-      setMessage("Start exploring!");
-    }
-  }, []);
+  const handleSearchOnInput = useCallback(
+    (value: string) => {
+      setSearchValue(value);
+      if (value.length >= 2) {
+        debounceSearch(value);
+        onSearch();
+      }
+      if (value.length < 2) {
+        setMessage("Please enter at least 2 characters");
+      }
+      if (value.length === 0) {
+        setMovieList([]);
+        setMessage("Start exploring!");
+      }
+    },
+    [debounceSearch],
+  );
 
   const handleOnClear = useCallback(() => {
     setSearchValue("");
@@ -68,22 +80,38 @@ export const MovieList = () => {
     setMessage("Start exploring!");
   }, []);
 
+  useEffect(() => {
+    if (
+      movieListRef.current?.scrollHeight &&
+      movieListRef.current?.scrollHeight > document.body.clientHeight
+    ) {
+      setScroll(true);
+    }
+  }, [movieList]);
+
   const renderMovies = useMemo(
     () => (
-      <div className="no-scrollbar relative flex h-[calc(100%-80px)] flex-wrap content-start justify-center gap-8 overflow-auto px-4 pb-32">
+      <div
+        ref={movieListRef}
+        className="no-scrollbar relative flex h-[calc(100%-80px)] flex-wrap content-start justify-center gap-8 overflow-auto px-4 pb-32"
+      >
         {movieList.map((movie) => (
           <MovieCard movie={movie} key={movie.imdbid} />
         ))}
-        <ScrollIndicator className="fixed bottom-0 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2" />
-        <div className="fixed bottom-0 left-0 z-0 h-32 w-full bg-gradient-to-t from-zinc-50"></div>
+        {scroll && (
+          <>
+            <ScrollIndicator className="fixed bottom-0 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2" />
+            <div className="fixed bottom-0 left-0 z-0 h-32 w-full bg-gradient-to-t from-zinc-50"></div>
+          </>
+        )}
       </div>
     ),
-    [movieList],
+    [movieList, scroll],
   );
 
   return (
     <>
-      <div className="mb-8">
+      <div className="mb-8 min-w-[300px]">
         <Input
           icon={faMagnifyingGlass}
           type="search"
@@ -99,6 +127,11 @@ export const MovieList = () => {
         </div>
       )}
       {loading && <LoadingSpinner text="Loading..." />}
+      {error && (
+        <div className="bg-gradient-to-t from-zinc-950 via-red-600 to-red-600 bg-clip-text text-center text-2xl font-semibold text-transparent">
+          An error occurred. Please try again.
+        </div>
+      )}
       {movieList.length > 0 && renderMovies}
     </>
   );
