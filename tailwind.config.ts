@@ -8,7 +8,23 @@ const config: Config = {
   ],
   darkMode: 'selector',
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        'scroll-indicator': {
+          '0%': {
+            'top': '0%',
+            'opacity': '1',
+          },
+          '100%': {
+            'top': '60%',
+            'opacity': '0',
+          },
+        },
+      },
+      animation: {
+        'scroll-indicator': 'scroll-indicator 1s ease-in-out infinite',
+      },
+    },
   },
   plugins: [],
 };
