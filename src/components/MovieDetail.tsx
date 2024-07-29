@@ -82,7 +82,8 @@ export const MovieDetail = ({ movie }: { movie: TMovieDetail | null }) => {
                 alt={movie.title}
                 loading="lazy"
                 fill
-                className="animate-fade-in object-cover"
+                sizes="100vw, 50vw, 33vw"
+                className="absolute animate-fade-in object-cover"
               />
             ) : (
               <>
@@ -91,7 +92,8 @@ export const MovieDetail = ({ movie }: { movie: TMovieDetail | null }) => {
                   alt="No image available"
                   loading="lazy"
                   fill
-                  className="animate-fade-in object-contain object-top dark:invert"
+                  sizes="100vw, 50vw, 33vw"
+                  className="absolute animate-fade-in object-contain object-top dark:invert"
                 />
                 <div
                   className={clsx(

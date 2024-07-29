@@ -33,6 +33,7 @@ export const MovieCard = ({ movie, onClick }: IProps) => {
           src={movie.poster}
           alt={movie.title}
           fill
+          sizes="100vw, 50vw, 33vw"
           loading="lazy"
           className="absolute left-0 top-0 z-0 size-full animate-fade-in object-cover object-top"
         />
@@ -43,6 +44,7 @@ export const MovieCard = ({ movie, onClick }: IProps) => {
             alt="No image available"
             fill
             loading="lazy"
+            sizes="100vw, 50vw, 33vw"
             className="absolute left-0 top-0 z-0 size-full animate-fade-in object-contain object-top dark:invert"
           />
           <div

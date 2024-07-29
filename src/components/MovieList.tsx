@@ -78,7 +78,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
         setMessage(EMessage.START);
       }
     },
-    [debounceSearch],
+    [debounceSearch, onSearch],
   );
 
   const handleOnClear = useCallback(() => {
@@ -149,7 +149,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
         )}
       </div>
     ),
-    [movieList, scroll, movieDetailModalOpen],
+    [movieList, scroll, movieDetailModalOpen, handleOnMovieClick],
   );
 
   return (

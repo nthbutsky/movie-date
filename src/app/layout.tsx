@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={clsx(
           inter.className,
@@ -35,9 +35,8 @@ export default function RootLayout({
           <Image
             src={poster}
             alt=""
-            fill
             loading="lazy"
-            className="absolute -z-50 animate-fade-in object-cover"
+            className="fixed left-0 top-0 -z-50 h-full w-full animate-fade-in object-cover"
           />
           <div className="absolute left-1/2 top-1/2 -z-40 size-full -translate-x-1/2 -translate-y-1/2 animate-fade-in-delayed bg-zinc-50 opacity-75 dark:bg-zinc-950" />
           {children}
