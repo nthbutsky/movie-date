@@ -1,5 +1,5 @@
 import {
-  TMovieDataOrigin,
+  TMovieDataOrigin, TMovieDetailOrigin
 } from '@/types/movies';
 import {
   apiHttpClient,
@@ -8,6 +8,12 @@ import {
   IApiResponse,
 } from '@/types/api/api-response';
 
+const apiKey = `/?apikey=${process.env.NEXT_PUBLIC__OMDB_API}`;
+
 export const getMoviesDataBySearch = (payload: string): IApiResponse<TMovieDataOrigin> => {
-  return apiHttpClient.get(`/?apikey=${process.env.NEXT_PUBLIC__OMDB_API}&s=${payload}`);
+  return apiHttpClient.get(`${apiKey}&s=${payload}`);
 };
+
+export const getMovieDataById = (payload: string): IApiResponse<TMovieDetailOrigin> => {
+  return apiHttpClient.get(`${apiKey}&i=${payload}`);
+}

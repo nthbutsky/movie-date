@@ -6,14 +6,20 @@ import { MovieCard } from "@/components/MovieCard";
 import { ScrollIndicator } from "@/components/ScrollIndicator";
 import { Input } from "@/components/Input";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { Modal } from "@/components/Modal";
+import { MovieDetail } from "@/components/MovieDetail";
 
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
-import { getMoviesDataBySearch } from "@/api/movies";
+import { getMovieDataById, getMoviesDataBySearch } from "@/api/movies";
 
-import { EResponse, TMovie } from "@/types/movies";
+import { EResponse, TMovie, TMovieDetail } from "@/types/movies";
+import { EMessage } from "@/types/messages";
 
-import { transformApiData } from "@/utils/transformApiData";
+import {
+  transformMovieApiData,
+  transformMovieDetailApiData,
+} from "@/utils/transform-api-data";
 
 import { useDebounce } from "@/hooks/useDebounce";
 
@@ -24,13 +30,8 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [scroll, setScroll] = useState(false);
-
-  const enum EMessage {
-    START = "Start exploring!",
-    NO_RESULT = "No results found for",
-    ERROR = "An error occurred. Please try again.",
-    MIN_CHAR = "Please enter at least 2 characters",
-  }
+  const [selectedMovie, setSelectedMovie] = useState<TMovieDetail | null>(null);
+  const [movieDetailModalOpen, setMovieDetailModalOpen] = useState(false);
 
   const DEBOUNCE_DELAY = 1000;
 
@@ -50,14 +51,13 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
         setMessage(`${EMessage.NO_RESULT} "${value}"`);
         return;
       }
-      const data = transformApiData(response.data);
+      const data = transformMovieApiData(response.data);
       setMovieList(data.search);
     } catch (error) {
       console.error(error);
       setError(true);
     } finally {
       setLoading(false);
-      console.log(movieList);
     }
   };
 
@@ -96,6 +96,36 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
     }
   }, [movieList]);
 
+  const getMovieDetail = async (id: string) => {
+    setError(false);
+    setLoading(true);
+    try {
+      const response = await getMovieDataById(id);
+      if ("errors" in response.data) {
+        setError(true);
+        console.error(response.data.errors);
+        return;
+      }
+      const data = transformMovieDetailApiData(response.data);
+      setSelectedMovie(data);
+    } catch (error) {
+      console.error(error);
+      setError(true);
+    } finally {
+      setLoading(false);
+      setMovieDetailModalOpen(true);
+    }
+  };
+
+  const handleOnMovieClick = useCallback((id: string) => {
+    getMovieDetail(id);
+  }, []);
+
+  const handleOnCloseModal = useCallback(() => {
+    setMovieDetailModalOpen(false);
+    setSelectedMovie(null);
+  }, []);
+
   const renderMovies = useMemo(
     () => (
       <div
@@ -103,17 +133,23 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
         className="no-scrollbar relative flex flex-wrap content-start justify-center gap-8 overflow-auto p-4 pb-28"
       >
         {movieList.map((movie) => (
-          <MovieCard movie={movie} key={movie.imdbid} />
+          <MovieCard
+            movie={movie}
+            key={movie.id}
+            onClick={(id) => handleOnMovieClick(id)}
+          />
         ))}
         {scroll && (
           <>
-            <ScrollIndicator className="fixed bottom-2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2" />
+            {!movieDetailModalOpen && (
+              <ScrollIndicator className="fixed bottom-2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2" />
+            )}
             <div className="fixed bottom-0 left-0 z-10 h-32 w-full bg-gradient-to-t from-zinc-50 dark:from-zinc-950"></div>
           </>
         )}
       </div>
     ),
-    [movieList, scroll],
+    [movieList, scroll, movieDetailModalOpen],
   );
 
   return (
@@ -133,13 +169,18 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
           {message}
         </div>
       )}
-      {loading && <LoadingSpinner text="Loading..." />}
       {error && (
         <div className="bg-gradient-to-t from-zinc-950 via-red-600 to-red-600 bg-clip-text text-center text-3xl font-semibold text-transparent">
           {EMessage.ERROR}
         </div>
       )}
       {movieList.length > 0 && renderMovies}
+
+      <Modal isOpen={movieDetailModalOpen} onClose={() => handleOnCloseModal()}>
+        <MovieDetail movie={selectedMovie} />
+      </Modal>
+
+      {loading && <LoadingSpinner text="Loading..." className="fixed z-50" />}
     </>
   );
 };

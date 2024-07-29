@@ -5,31 +5,36 @@ import { Righteous } from "next/font/google";
 import clsx from "clsx";
 
 import { TMovie } from "@/types/movies";
+import { EMessage } from "@/types/messages";
 
 import noImage from "@/assets/images/no-image.jpg";
 
+import { checkPosterUrl } from "@/utils/check-poster-url";
+
 const righteous = Righteous({ subsets: ["latin"], weight: "400" });
 
-export const MovieCard = ({ movie }: { movie: TMovie }) => {
-  const isValidUrl = (url: string) =>
-    url.startsWith("http://") ||
-    url.startsWith("https://") ||
-    url.startsWith("/");
+interface IProps {
+  movie: TMovie;
+  onClick: (id: string) => void;
+}
 
+export const MovieCard = ({ movie, onClick }: IProps) => {
   return (
-    <div
+    <button
+      type="button"
+      onClick={() => onClick(movie.id)}
       className={clsx(
-        "shadow-glow group relative h-96 w-64 overflow-hidden rounded-md shadow-violet-600",
-        { "bg-white dark:bg-black": !isValidUrl(movie.poster) },
+        "group relative inline-flex h-96 w-64 overflow-hidden rounded-md shadow-glow shadow-violet-600",
+        { "bg-white dark:bg-black": !checkPosterUrl(movie.poster) },
       )}
     >
-      {isValidUrl(movie.poster) ? (
+      {checkPosterUrl(movie.poster) ? (
         <Image
           src={movie.poster}
           alt={movie.title}
           fill
           loading="lazy"
-          className="animate-fade-in absolute left-0 top-0 z-0 size-full object-cover object-top"
+          className="absolute left-0 top-0 z-0 size-full animate-fade-in object-cover object-top"
         />
       ) : (
         <>
@@ -38,15 +43,15 @@ export const MovieCard = ({ movie }: { movie: TMovie }) => {
             alt="No image available"
             fill
             loading="lazy"
-            className="animate-fade-in absolute left-0 top-0 z-0 size-full object-contain object-top dark:invert"
+            className="absolute left-0 top-0 z-0 size-full animate-fade-in object-contain object-top dark:invert"
           />
           <div
             className={clsx(
-              "absolute left-1/2 top-[80%] z-0 w-full -translate-x-1/2 -translate-y-1/2 bg-gradient-to-t from-zinc-950 via-violet-600 to-violet-600 bg-clip-text text-center text-2xl font-semibold uppercase text-transparent",
+              "absolute left-1/2 top-[80%] z-0 w-full -translate-x-1/2 -translate-y-1/2 text-center text-2xl font-semibold uppercase text-violet-600",
               righteous.className,
             )}
           >
-            No Poster
+            {EMessage.NO_POSTER}
           </div>
         </>
       )}
@@ -63,6 +68,6 @@ export const MovieCard = ({ movie }: { movie: TMovie }) => {
           {movie.type}
         </p>
       </div>
-    </div>
+    </button>
   );
 };

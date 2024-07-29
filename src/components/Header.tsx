@@ -16,7 +16,7 @@ export const Header = ({ title }: { title: string }) => {
       <Image src={logo} width={48} height={48} alt={title} loading="lazy" />
       <h1
         className={clsx(
-          "font inline-block bg-gradient-to-t from-zinc-950 via-violet-600 to-violet-600 bg-clip-text text-5xl text-transparent dark:from-zinc-300 dark:via-violet-600 dark:to-violet-600",
+          "bg-gradient-to-t from-zinc-950 via-violet-600 to-violet-600 bg-clip-text text-4xl text-transparent dark:from-zinc-300 dark:via-violet-600 dark:to-violet-600 sm:text-5xl",
           righteous.className,
         )}
       >

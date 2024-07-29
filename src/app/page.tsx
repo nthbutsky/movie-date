@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useState } from "react";
 
 import clsx from "clsx";
 
@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <main
       className={clsx(
-        "animate-fade-in flex h-screen flex-col items-center px-4",
+        "flex h-screen animate-fade-in flex-col items-center px-4",
         {
           "justify-center": !dataAvailable,
         },
