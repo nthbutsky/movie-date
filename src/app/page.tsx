@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 
 import clsx from "clsx";
 
@@ -10,16 +10,18 @@ import { MovieList } from "@/components/MovieList";
 export default function Home() {
   const [dataAvailable, setDataAvailable] = useState(false);
 
+  const headerTitle = "Movie Date";
+
   return (
     <main
       className={clsx(
-        "flex h-screen flex-col items-center px-4 transition-all ease-in-out",
+        "animate-fade-in flex h-screen flex-col items-center px-4",
         {
           "justify-center": !dataAvailable,
         },
       )}
     >
-      <Header />
+      <Header title={headerTitle} />
       <MovieList onSearch={() => setDataAvailable} />
     </main>
   );

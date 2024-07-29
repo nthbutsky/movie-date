@@ -1,13 +1,16 @@
 import { useTheme } from "next-themes";
 
-import { ETheme } from "@/types/theme";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon } from "@fortawesome/free-regular-svg-icons";
 import { faSun } from "@fortawesome/free-regular-svg-icons";
 
 export function ThemeToggler() {
   const { theme, setTheme } = useTheme();
+
+  enum ETheme {
+    LIGHT = "light",
+    DARK = "dark",
+  }
 
   return (
     <button

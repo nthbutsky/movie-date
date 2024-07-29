@@ -13,9 +13,9 @@ import { getMoviesDataBySearch } from "@/api/movies";
 
 import { EResponse, TMovie } from "@/types/movies";
 
-import { transformApiData } from "@/helpers/transformApiData";
+import { transformApiData } from "@/utils/transformApiData";
 
-import { useDebounce } from "@/utils/useDebounce";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const [movieList, setMovieList] = useState<TMovie[] | []>([]);
@@ -24,6 +24,13 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [scroll, setScroll] = useState(false);
+
+  const enum EMessage {
+    START = "Start exploring!",
+    NO_RESULT = "No results found for",
+    ERROR = "An error occurred. Please try again.",
+    MIN_CHAR = "Please enter at least 2 characters",
+  }
 
   const DEBOUNCE_DELAY = 1000;
 
@@ -40,7 +47,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
         return;
       }
       if (response.data.Response === EResponse.FALSE) {
-        setMessage(`No results found for "${value}"`);
+        setMessage(`${EMessage.NO_RESULT} "${value}"`);
         return;
       }
       const data = transformApiData(response.data);
@@ -64,11 +71,11 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
         onSearch();
       }
       if (value.length < 2) {
-        setMessage("Please enter at least 2 characters");
+        setMessage(EMessage.MIN_CHAR);
       }
       if (value.length === 0) {
         setMovieList([]);
-        setMessage("Start exploring!");
+        setMessage(EMessage.START);
       }
     },
     [debounceSearch],
@@ -77,7 +84,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const handleOnClear = useCallback(() => {
     setSearchValue("");
     setMovieList([]);
-    setMessage("Start exploring!");
+    setMessage(EMessage.START);
   }, []);
 
   useEffect(() => {
@@ -129,7 +136,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
       {loading && <LoadingSpinner text="Loading..." />}
       {error && (
         <div className="bg-gradient-to-t from-zinc-950 via-red-600 to-red-600 bg-clip-text text-center text-3xl font-semibold text-transparent">
-          An error occurred. Please try again.
+          {EMessage.ERROR}
         </div>
       )}
       {movieList.length > 0 && renderMovies}
