@@ -26,9 +26,9 @@ import { useDebounce } from "@/hooks/useDebounce";
 export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const [movieList, setMovieList] = useState<TMovie[] | []>([]);
   const [searchValue, setSearchValue] = useState("");
-  const [message, setMessage] = useState("Start exploring!");
+  const [message, setMessage] = useState<EMessage | string>(EMessage.START);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(true);
   const [scroll, setScroll] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<TMovieDetail | null>(null);
   const [movieDetailModalOpen, setMovieDetailModalOpen] = useState(false);
@@ -66,13 +66,9 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const handleSearchOnInput = useCallback(
     (value: string) => {
       setSearchValue(value);
-      if (value.length >= 2) {
-        debounceSearch(value);
-        onSearch();
-      }
-      if (value.length < 2) {
-        setMessage(EMessage.MIN_CHAR);
-      }
+      debounceSearch(value);
+      onSearch();
+
       if (value.length === 0) {
         setMovieList([]);
         setMessage(EMessage.START);
@@ -170,7 +166,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
         </div>
       )}
       {error && (
-        <div className="bg-gradient-to-t from-zinc-950 via-red-600 to-red-600 bg-clip-text text-center text-3xl font-semibold text-transparent">
+        <div className="bg-gradient-to-t from-zinc-950 via-red-600 to-red-600 bg-clip-text text-center text-3xl font-semibold text-transparent dark:from-zinc-300 dark:via-red-600 dark:to-red-600">
           {EMessage.ERROR}
         </div>
       )}
