@@ -28,7 +28,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const [searchValue, setSearchValue] = useState("");
   const [message, setMessage] = useState<EMessage | string>(EMessage.START);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(true);
+  const [error, setError] = useState(false);
   const [scroll, setScroll] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<TMovieDetail | null>(null);
   const [movieDetailModalOpen, setMovieDetailModalOpen] = useState(false);
