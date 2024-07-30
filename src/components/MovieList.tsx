@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 
+import clsx from "clsx";
+
 import { MovieCard } from "@/components/MovieCard";
 import { ScrollIndicator } from "@/components/ScrollIndicator";
 import { Input } from "@/components/Input";
@@ -66,8 +68,11 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const handleSearchOnInput = useCallback(
     (value: string) => {
       setSearchValue(value);
-      debounceSearch(value);
-      onSearch();
+
+      if (value.length > 0) {
+        debounceSearch(value);
+        onSearch();
+      }
 
       if (value.length === 0) {
         setMovieList([]);
@@ -163,22 +168,31 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
           onClear={() => handleOnClear()}
         />
       </div>
+
       <div className="relative w-full">
-        {!loading && !error && movieList.length === 0 && (
-          <div className="absolute top-0 -z-10 w-full animate-slide-out bg-gradient-to-t from-zinc-900 via-violet-600 to-violet-600 bg-clip-text text-center text-3xl font-semibold text-transparent dark:from-zinc-300 dark:via-violet-600 dark:to-violet-600">
-            {message}
+        {!loading && (
+          <div
+            className={clsx(
+              "absolute -top-2 -z-10 w-full animate-slide-out bg-gradient-to-t bg-clip-text text-center text-2xl font-semibold text-transparent",
+              {
+                "from-zinc-900 via-red-600 to-red-600 dark:from-zinc-300 dark:via-red-600 dark:to-red-600":
+                  error,
+                "from-zinc-900 via-violet-600 to-violet-600 dark:from-zinc-300 dark:via-violet-600 dark:to-violet-600":
+                  !error,
+              },
+            )}
+          >
+            {error ? EMessage.ERROR : movieList.length === 0 ? message : ""}
           </div>
         )}
       </div>
-      {error && (
-        <div className="bg-gradient-to-t from-zinc-900 via-red-600 to-red-600 bg-clip-text text-center text-3xl font-semibold text-transparent dark:from-zinc-300 dark:via-red-600 dark:to-red-600">
-          {EMessage.ERROR}
-        </div>
-      )}
+
       {movieList.length > 0 && renderMovies}
+
       <Modal isOpen={movieDetailModalOpen} onClose={() => handleOnCloseModal()}>
         <MovieDetail movie={selectedMovie} />
       </Modal>
+
       {loading && <LoadingSpinner text="Loading..." />}
     </>
   );

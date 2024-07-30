@@ -47,12 +47,15 @@ const config: Config = {
         'slide-out': {
           '0%': {
             'transform': 'translateY(-70px)',
+            'opacity': '0',
           },
           '50%': {
             'transform': 'translateY(-70px)',
+            'opacity': '0',
           },
           '100%': {
             'transform': 'translateY(0)',
+            'opacity': '1',
           },
         }
       },
@@ -61,7 +64,7 @@ const config: Config = {
         'fade-in': 'fade-in 1s ease-in-out',
         'fade-in-spinner': 'fade-in-spinner .3s ease-in-out',
         'fade-in-layout': 'fade-in-layout 3s ease-in-out',
-        'slide-out': 'slide-out 3s ease-in-out',
+        'slide-out': 'slide-out 2s ease-in-out',
       },
       boxShadow: {
         'glow': '0px 0px 12px 0px',
