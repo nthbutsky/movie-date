@@ -1,17 +1,31 @@
 import clsx from "clsx";
 
+import { Righteous } from "next/font/google";
+
+const righteous = Righteous({ subsets: ["latin"], weight: "400" });
+
 type TProps = {
-  text: string;
+  text?: string;
   className?: string;
+  isBackground?: boolean;
 };
 
-export const LoadingSpinner = ({ text, className }: TProps) => {
+export const LoadingSpinner = ({
+  text,
+  className,
+  isBackground = true,
+}: TProps) => {
   return (
-    <>
-      <div className="absolute left-1/2 top-1/2 z-40 h-64 w-full -translate-x-1/2 -translate-y-1/2 bg-gradient-to-t from-transparent via-zinc-50 to-transparent dark:bg-gradient-to-t dark:from-transparent dark:via-zinc-950 dark:to-transparent" />
-      <div className={clsx("flex items-center justify-center", className)}>
+    <div
+      className={clsx("animate-fade-in-spinner fixed z-50 w-full", className)}
+    >
+      {isBackground && (
+        <div className="absolute left-1/2 top-1/2 z-40 h-64 w-full -translate-x-1/2 -translate-y-1/2 bg-gradient-to-t from-transparent via-zinc-50 to-transparent dark:bg-gradient-to-t dark:from-transparent dark:via-zinc-900 dark:to-transparent" />
+      )}
+
+      <div className="absolute left-1/2 top-1/2 z-50 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center gap-2">
         <svg
-          className="-ml-1 mr-3 h-8 w-8 animate-spin text-violet-600"
+          className="h-8 w-8 animate-spin text-violet-600"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -30,10 +44,17 @@ export const LoadingSpinner = ({ text, className }: TProps) => {
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
-        <span className="bg-gradient-to-t from-zinc-950 via-violet-600 to-violet-600 bg-clip-text text-2xl font-semibold text-transparent dark:from-zinc-300 dark:via-violet-600 dark:to-violet-600">
-          {text}
-        </span>
+        {text && (
+          <span
+            className={clsx(
+              "text-3xl font-semibold text-violet-600",
+              righteous.className,
+            )}
+          >
+            {text}
+          </span>
+        )}
       </div>
-    </>
+    </div>
   );
 };

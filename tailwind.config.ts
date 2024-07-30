@@ -28,19 +28,40 @@ const config: Config = {
             'opacity': '1',
           },
         },
-        'fade-in-delayed': {
+        'fade-in-spinner': {
+          '0%': {
+            'opacity': '0',
+          },
+          '100%': {
+            'opacity': '1',
+          },
+        },
+        'fade-in-layout': {
           '0%': {
             'opacity': '0',
           },
           '100%': {
             'opacity': '0.75',
           },
+        },
+        'slide-out': {
+          '0%': {
+            'transform': 'translateY(-70px)',
+          },
+          '50%': {
+            'transform': 'translateY(-70px)',
+          },
+          '100%': {
+            'transform': 'translateY(0)',
+          },
         }
       },
       animation: {
         'scroll-indicator': 'scroll-indicator 1s ease-in-out infinite',
-        'fade-in': 'fade-in 2s ease-in-out',
-        'fade-in-delayed': 'fade-in-delayed 4s ease-in-out',
+        'fade-in': 'fade-in 1s ease-in-out',
+        'fade-in-spinner': 'fade-in-spinner .3s ease-in-out',
+        'fade-in-layout': 'fade-in-layout 3s ease-in-out',
+        'slide-out': 'slide-out 3s ease-in-out',
       },
       boxShadow: {
         'glow': '0px 0px 12px 0px',
@@ -50,3 +71,4 @@ const config: Config = {
   plugins: [],
 };
 export default config;
+

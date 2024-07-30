@@ -37,7 +37,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
 
   const movieListRef = useRef<HTMLDivElement>(null);
 
-  const searchItem = async (value: string) => {
+  const searchItem = useCallback(async (value: string) => {
     setError(false);
     setLoading(true);
     try {
@@ -49,17 +49,17 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
       }
       if (response.data.Response === EResponse.FALSE) {
         setMessage(`${EMessage.NO_RESULT} "${value}"`);
-        return;
+      } else {
+        const data = transformMovieApiData(response.data);
+        setMovieList(data.search);
       }
-      const data = transformMovieApiData(response.data);
-      setMovieList(data.search);
     } catch (error) {
       console.error(error);
       setError(true);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const debounceSearch = useDebounce(searchItem, DEBOUNCE_DELAY);
 
@@ -92,7 +92,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
     }
   }, [movieList]);
 
-  const getMovieDetail = async (id: string) => {
+  const getMovieDetail = useCallback(async (id: string) => {
     setError(false);
     setLoading(true);
     try {
@@ -104,18 +104,21 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
       }
       const data = transformMovieDetailApiData(response.data);
       setSelectedMovie(data);
+      setMovieDetailModalOpen(true);
     } catch (error) {
       console.error(error);
       setError(true);
     } finally {
       setLoading(false);
-      setMovieDetailModalOpen(true);
     }
-  };
-
-  const handleOnMovieClick = useCallback((id: string) => {
-    getMovieDetail(id);
   }, []);
+
+  const handleOnMovieClick = useCallback(
+    (id: string) => {
+      getMovieDetail(id);
+    },
+    [getMovieDetail],
+  );
 
   const handleOnCloseModal = useCallback(() => {
     setMovieDetailModalOpen(false);
@@ -140,7 +143,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
             {!movieDetailModalOpen && (
               <ScrollIndicator className="fixed bottom-2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2" />
             )}
-            <div className="fixed bottom-0 left-0 z-10 h-32 w-full bg-gradient-to-t from-zinc-50 dark:from-zinc-950"></div>
+            <div className="fixed bottom-0 left-0 z-10 h-32 w-full bg-gradient-to-t from-zinc-50 dark:from-zinc-900"></div>
           </>
         )}
       </div>
@@ -160,23 +163,23 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
           onClear={() => handleOnClear()}
         />
       </div>
-      {!loading && !error && movieList.length === 0 && (
-        <div className="bg-gradient-to-t from-zinc-950 via-violet-600 to-violet-600 bg-clip-text text-center text-3xl font-semibold text-transparent dark:from-zinc-300 dark:via-violet-600 dark:to-violet-600">
-          {message}
-        </div>
-      )}
+      <div className="relative w-full">
+        {!loading && !error && movieList.length === 0 && (
+          <div className="absolute top-0 -z-10 w-full animate-slide-out bg-gradient-to-t from-zinc-900 via-violet-600 to-violet-600 bg-clip-text text-center text-3xl font-semibold text-transparent dark:from-zinc-300 dark:via-violet-600 dark:to-violet-600">
+            {message}
+          </div>
+        )}
+      </div>
       {error && (
-        <div className="bg-gradient-to-t from-zinc-950 via-red-600 to-red-600 bg-clip-text text-center text-3xl font-semibold text-transparent dark:from-zinc-300 dark:via-red-600 dark:to-red-600">
+        <div className="bg-gradient-to-t from-zinc-900 via-red-600 to-red-600 bg-clip-text text-center text-3xl font-semibold text-transparent dark:from-zinc-300 dark:via-red-600 dark:to-red-600">
           {EMessage.ERROR}
         </div>
       )}
       {movieList.length > 0 && renderMovies}
-
       <Modal isOpen={movieDetailModalOpen} onClose={() => handleOnCloseModal()}>
         <MovieDetail movie={selectedMovie} />
       </Modal>
-
-      {loading && <LoadingSpinner text="Loading..." className="fixed z-50" />}
+      {loading && <LoadingSpinner text="Loading..." />}
     </>
   );
 };
