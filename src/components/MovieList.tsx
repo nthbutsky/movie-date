@@ -31,7 +31,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const [message, setMessage] = useState<EMessage | string>(EMessage.START);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [scroll, setScroll] = useState(false);
+  const [scrollIndicator, setScrollIndicator] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<TMovieDetail | null>(null);
   const [movieDetailModalOpen, setMovieDetailModalOpen] = useState(false);
 
@@ -93,7 +93,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
       movieListRef.current?.scrollHeight &&
       movieListRef.current?.scrollHeight > document.body.clientHeight
     ) {
-      setScroll(true);
+      setScrollIndicator(true);
     }
   }, [movieList]);
 
@@ -143,7 +143,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
             onClick={(id) => handleOnMovieClick(id)}
           />
         ))}
-        {scroll && (
+        {scrollIndicator && (
           <>
             {!movieDetailModalOpen && (
               <ScrollIndicator className="fixed bottom-2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2" />
@@ -153,7 +153,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
         )}
       </div>
     ),
-    [movieList, scroll, movieDetailModalOpen, handleOnMovieClick],
+    [movieList, scrollIndicator, movieDetailModalOpen, handleOnMovieClick],
   );
 
   return (
