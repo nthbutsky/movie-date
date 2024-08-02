@@ -14,12 +14,9 @@ export default function Home() {
 
   return (
     <main
-      className={clsx(
-        "flex h-screen animate-fade-in flex-col items-center px-4",
-        {
-          "justify-center": !dataAvailable,
-        },
-      )}
+      className={clsx("flex h-dvh animate-fade-in flex-col items-center px-4", {
+        "justify-center": !dataAvailable,
+      })}
     >
       <Header title={headerTitle} />
       <MovieList onSearch={() => setDataAvailable} />
