@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <main
       className={clsx("flex h-dvh animate-fade-in flex-col items-center px-4", {
-        "justify-center": !dataAvailable,
+        "-mt-6 justify-center": !dataAvailable,
       })}
     >
       <Header title={headerTitle} />
