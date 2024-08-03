@@ -2,14 +2,13 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 
-import clsx from "clsx";
-
 import { MovieCard } from "@/components/MovieCard";
 import { ScrollIndicator } from "@/components/ScrollIndicator";
 import { Input } from "@/components/Input";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Modal } from "@/components/Modal";
 import { MovieDetail } from "@/components/MovieDetail";
+import { Informer } from "@/components/Informer";
 
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
@@ -25,7 +24,7 @@ import {
 
 import { useDebounce } from "@/hooks/useDebounce";
 
-export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
+export const MovieList = () => {
   const [movieList, setMovieList] = useState<TMovie[] | []>([]);
   const [searchValue, setSearchValue] = useState("");
   const [message, setMessage] = useState<EMessage | string>(EMessage.START);
@@ -36,28 +35,27 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const [movieDetailModalOpen, setMovieDetailModalOpen] = useState(false);
 
   const DEBOUNCE_DELAY = 1000;
+  const MOVIE_LIST_OFFSET = 212;
 
   const movieListRef = useRef<HTMLDivElement>(null);
 
   const searchItem = useCallback(async (value: string) => {
+    setMovieList([]);
     setError(false);
     setLoading(true);
     try {
       const response = await getMoviesDataBySearch(value);
-      if ("errors" in response.data) {
-        setError(true);
-        console.error(response.data.errors);
-        return;
-      }
       if (response.data.Response === EResponse.FALSE) {
-        setMessage(`${EMessage.NO_RESULT} "${value}"`);
+        setError(true);
+        setMessage(`${EMessage.NO_RESULT} ${value}`);
       } else {
         const data = transformMovieApiData(response.data);
         setMovieList(data.search);
       }
     } catch (error) {
-      console.error(error);
       setError(true);
+      setMessage(EMessage.ERROR);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -68,10 +66,10 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   const handleSearchOnInput = useCallback(
     (value: string) => {
       setSearchValue(value);
+      setMessage("");
 
       if (value.length > 0) {
         debounceSearch(value);
-        onSearch();
       }
 
       if (value.length === 0) {
@@ -79,10 +77,11 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
         setMessage(EMessage.START);
       }
     },
-    [debounceSearch, onSearch],
+    [debounceSearch],
   );
 
   const handleOnClear = useCallback(() => {
+    setError(false);
     setSearchValue("");
     setMovieList([]);
     setMessage(EMessage.START);
@@ -91,7 +90,8 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
   useEffect(() => {
     if (
       movieListRef.current?.scrollHeight &&
-      movieListRef.current?.scrollHeight > document.body.clientHeight
+      movieListRef.current?.scrollHeight + MOVIE_LIST_OFFSET >
+        document.body.clientHeight
     ) {
       setScrollIndicator(true);
     }
@@ -102,17 +102,18 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
     setLoading(true);
     try {
       const response = await getMovieDataById(id);
-      if ("errors" in response.data) {
+      if (response.data.Response === EResponse.FALSE) {
         setError(true);
-        console.error(response.data.errors);
-        return;
+        setMessage(EMessage.ERROR);
+      } else {
+        const data = transformMovieDetailApiData(response.data);
+        setSelectedMovie(data);
+        setMovieDetailModalOpen(true);
       }
-      const data = transformMovieDetailApiData(response.data);
-      setSelectedMovie(data);
-      setMovieDetailModalOpen(true);
     } catch (error) {
-      console.error(error);
       setError(true);
+      setMessage(EMessage.ERROR);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -146,9 +147,9 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
         {scrollIndicator && (
           <>
             {!movieDetailModalOpen && (
-              <ScrollIndicator className="fixed bottom-2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2" />
+              <ScrollIndicator className="fixed bottom-0 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 sm:bottom-2" />
             )}
-            <div className="fixed bottom-0 left-0 z-10 h-32 w-full bg-gradient-to-t from-zinc-50 dark:from-zinc-900"></div>
+            <div className="fixed bottom-0 left-0 z-10 h-16 w-full bg-gradient-to-t from-zinc-50 dark:from-zinc-900 sm:h-32"></div>
           </>
         )}
       </div>
@@ -170,21 +171,7 @@ export const MovieList = ({ onSearch }: { onSearch: () => void }) => {
       </div>
 
       <div className="relative w-full">
-        {!loading && (
-          <div
-            className={clsx(
-              "absolute -top-2 -z-10 w-full animate-slide-out bg-gradient-to-t bg-clip-text text-center text-2xl font-semibold text-transparent",
-              {
-                "from-zinc-900 via-red-600 to-red-600 dark:from-zinc-300 dark:via-red-600 dark:to-red-600":
-                  error,
-                "from-zinc-900 via-violet-600 to-violet-600 dark:from-zinc-300 dark:via-violet-600 dark:to-violet-600":
-                  !error,
-              },
-            )}
-          >
-            {error ? EMessage.ERROR : movieList.length === 0 ? message : ""}
-          </div>
-        )}
+        {(error || message) && <Informer message={message} error={error} />}
       </div>
 
       {movieList.length > 0 && renderMovies}

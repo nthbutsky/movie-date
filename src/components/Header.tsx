@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 import { Righteous } from "next/font/google";
@@ -12,7 +14,7 @@ const righteous = Righteous({ subsets: ["latin"], weight: "400" });
 
 export const Header = ({ title }: { title: string }) => {
   return (
-    <header className="my-8 flex items-end justify-center gap-4">
+    <header className="mb-8 mt-8 flex items-end justify-center gap-4 sm:mt-16">
       <Image src={logo} width={48} height={48} alt={title} priority />
       <h1
         className={clsx(

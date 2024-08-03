@@ -13,11 +13,11 @@ const config: Config = {
         'scroll-indicator': {
           '0%': {
             'top': '0%',
-            'opacity': '1',
+            'opacity': '0',
           },
           '100%': {
             'top': '60%',
-            'opacity': '0',
+            'opacity': '1',
           },
         },
         'fade-in': {
@@ -57,6 +57,24 @@ const config: Config = {
             'transform': 'translateY(0)',
             'opacity': '1',
           },
+        },
+        'slide-on': {
+          '0%': {
+            'transform': 'translateY(35%)',
+            'opacity': '0',
+          },
+          '50%': {
+            'transform': 'translateY(35%)',
+            'opacity': '1',
+          },
+          '75%': {
+            'transform': 'translateY(35%)',
+            'opacity': '1',
+          },
+          '100%': {
+            'transform': 'translateY(0)',
+            'opacity': '1',
+          },
         }
       },
       animation: {
@@ -65,6 +83,7 @@ const config: Config = {
         'fade-in-spinner': 'fade-in-spinner .3s ease-in-out',
         'fade-in-layout': 'fade-in-layout 3s ease-in-out',
         'slide-out': 'slide-out 2s ease-in-out',
+        'slide-on': 'slide-on 4s ease-in-out',
       },
       boxShadow: {
         'glow': '0px 0px 12px 0px',

@@ -28,7 +28,10 @@ export const MovieDetail = ({ movie }: { movie: TMovieDetail | null }) => {
     <div className="grid grid-cols-1 sm:min-h-[384px] sm:grid-cols-[60%_auto]">
       <div className="relative z-10 bg-zinc-50 p-4 text-zinc-500 opacity-90 dark:bg-zinc-900 dark:text-zinc-50 sm:static sm:opacity-100">
         <h1
-          className={clsx("mb-2 text-3xl text-violet-600", righteous.className)}
+          className={clsx(
+            "mb-2 max-w-64 text-3xl text-violet-600",
+            righteous.className,
+          )}
         >
           {movie.title}
         </h1>

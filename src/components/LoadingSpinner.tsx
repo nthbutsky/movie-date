@@ -17,7 +17,10 @@ export const LoadingSpinner = ({
 }: TProps) => {
   return (
     <div
-      className={clsx("fixed z-50 w-full animate-fade-in-spinner", className)}
+      className={clsx(
+        "fixed z-50 h-full w-full animate-fade-in-spinner",
+        className,
+      )}
     >
       {isBackground && (
         <div className="absolute left-1/2 top-1/2 z-40 h-64 w-full -translate-x-1/2 -translate-y-1/2 bg-gradient-to-t from-transparent via-zinc-50 to-transparent dark:bg-gradient-to-t dark:from-transparent dark:via-zinc-900 dark:to-transparent" />

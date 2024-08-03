@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={clsx(
           inter.className,
-          "container mx-auto bg-zinc-50 dark:bg-zinc-900",
+          "container mx-auto overflow-hidden bg-zinc-50 dark:bg-zinc-900",
         )}
       >
         <ThemeProvider attribute="class">
